@@ -1,7 +1,13 @@
 import Link from 'next/link';
 import { SignInButton } from './SignInButton';
+import { UserAccountNav } from './UserAccountNav';
+import { getAuthSession } from '@/lib/auth';
+
 interface NavbarProps { }
-export const Navbar = () => {
+
+export const Navbar = async () => {
+  const session = await getAuthSession();
+  console.log(session)
   return (
     <nav className='fixed inset-x-0 top-0 bg-white dark:bg-gray-950 z-[10] h-fit border-b border-zinc-300 py-2'>
       <div className='flex items-center justify-center h-full gap-2 px-8 mx-auto sm:justify-between max-w-7xl'>
@@ -9,9 +15,22 @@ export const Navbar = () => {
           <p className=' rounded-lg border-2 border-b-4 border-r4 border-black px-2 py-1 text-xl font-bold transition-all hover:-translate-y-[2px] md:block dark:border-white'>Learnify</p>
         </Link>
         <div className='flex items-center'>
-          <Link href={"/create"} className='mr-3 '>Create Course</Link>
-          <Link href={"/settings"} className='mr-3'>Settings</Link>
-          <SignInButton />
+          <Link href={"/gallery"} className='mr-3 '>Gallery</Link>
+          {session?.user && (
+            <>
+              <Link href={"/create"} className='mr-3 '>Create Course</Link>
+              <Link href={"/settings"} className='mr-3'>Settings</Link>
+            </>
+          )}
+          <div className='flex items-center'>
+            {session?.user ?
+              <UserAccountNav user={session.user} /> : <SignInButton />
+            }
+          </div>
+
+
+
+
         </div>
       </div>
     </nav>
