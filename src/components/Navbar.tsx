@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SignInButton } from './SignInButton';
 interface NavbarProps { }
 export const Navbar = () => {
   return (
@@ -10,6 +11,7 @@ export const Navbar = () => {
         <div className='flex items-center'>
           <Link href={"/create"} className='mr-3 '>Create Course</Link>
           <Link href={"/settings"} className='mr-3'>Settings</Link>
+          <SignInButton />
         </div>
       </div>
     </nav>
