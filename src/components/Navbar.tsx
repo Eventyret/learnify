@@ -1,5 +1,4 @@
 import Link from 'next/link';
-
 interface NavbarProps { }
 export const Navbar = () => {
   return (
@@ -8,6 +7,10 @@ export const Navbar = () => {
         <Link href={"/gallery"} className='items-center hidden gap-2 sm:flex'>
           <p className=' rounded-lg border-2 border-b-4 border-r4 border-black px-2 py-1 text-xl font-bold transition-all hover:-translate-y-[2px] md:block dark:border-white'>Learnify</p>
         </Link>
+        <div className='flex items-center'>
+          <Link href={"/create"} className='mr-3 '>Create Course</Link>
+          <Link href={"/settings"} className='mr-3'>Settings</Link>
+        </div>
       </div>
     </nav>
   );
