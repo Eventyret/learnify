@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { SignInButton } from './SignInButton';
 import { UserAccountNav } from './UserAccountNav';
 import { getAuthSession } from '@/lib/auth';
+import { ThemeToggle } from './ThemeToggle';
 
 interface NavbarProps { }
 
@@ -21,6 +22,7 @@ export const Navbar = async () => {
               <Link href={"/settings"} className='mr-3'>Settings</Link>
             </>
           )}
+          <ThemeToggle className='mr-3' />
           <div className='flex items-center'>
             {session?.user ?
               <UserAccountNav user={session.user} /> : <SignInButton />
