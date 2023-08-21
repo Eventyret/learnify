@@ -19,10 +19,16 @@ export const CreateCourseForm = () => {
     }
   })
 
+  const onSubmit = (data: Input) => {
+    console.log(data);
+  }
+
   return (
     <div className='w-full'>
-      <Form>
-        <form></form>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+
+        </form>
       </Form>
     </div>
   );
