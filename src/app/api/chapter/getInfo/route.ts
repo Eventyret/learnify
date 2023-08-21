@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db'
 import { strict_output } from '@/lib/gpt'
 import { getQuestionsFromTranscript, getTranscript, searchYoutube } from '@/lib/youtube'
+import { Question } from '@prisma/client'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
