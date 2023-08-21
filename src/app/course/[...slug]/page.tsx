@@ -1,3 +1,4 @@
+import CourseSideBar from '@/components/CourseSideBar'
 import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
 
@@ -31,10 +32,15 @@ const CoursePage: React.FC<CoursePageProps> = async ({ params: { slug } }) => {
   if (!unit) {
     return redirect(`/gallery`)
   }
+  const chapter = unit.chapters[chapterIndex]
+  if (!chapter) {
+    return redirect(`/gallery`)
+  }
   return (
-    <div>
-      <pre>{JSON.stringify(course, null, 2)}</pre>
-    </div>
+    <CourseSideBar
+      course={course}
+      currentChapterId={chapter.id}
+    />
   );
 }
 
