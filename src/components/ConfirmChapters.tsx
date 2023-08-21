@@ -96,9 +96,6 @@ export const ConfirmChapters: React.FC<ConfirmChaptersProps> = ({ course }) => {
             Generate
             <ChevronRight className="w-4 h-4 ml-2" strokeWidth={4} />
           </Button>
-          )}
-
-
         </div>
         <Separator className="flex-[1]" />
       </div>
