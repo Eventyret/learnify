@@ -2,7 +2,7 @@
 import { Separator } from '@/components/ui/separator';
 import { Chapter, Course, Unit } from '@prisma/client';
 import { ChevronLeft, ChevronRight, Link } from 'lucide-react';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import ChapterCard, { ChapterCardHandler } from './ChapterCard';
 import { Button, buttonVariants } from './ui/button';
 
@@ -15,13 +15,24 @@ type ConfirmChaptersProps = {
 }
 
 export const ConfirmChapters: React.FC<ConfirmChaptersProps> = ({ course }) => {
+  const [loading, setLoading] = useState(false)
   const chapterRefs: Record<string, React.RefObject<ChapterCardHandler>> = {};
+
   course.units.forEach((unit) => {
     unit.chapters.forEach((chapter) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       chapterRefs[chapter.id] = React.useRef(null);
     });
   });
+
+  const [completedChapters, setCompletedChapters] = useState<Set<String>>(new Set());
+
+  const totalChaptersCount = useMemo(() => {
+    const totalChaptersCount = course.units.reduce((acc, unit) => {
+      return acc + unit.chapters.length;
+    }, 0);
+  }, [course.units])
+
   return (
     <div className='w-full mt-4'>
       {course.units.map((unit, unitIndex) => {
@@ -57,7 +68,9 @@ export const ConfirmChapters: React.FC<ConfirmChaptersProps> = ({ course }) => {
           <Button
             type="button"
             className="ml-4 font-semibold"
+            disabled={loading}
             onClick={() => {
+              setLoading(true)
               Object.values(chapterRefs).forEach((ref) => {
                 ref?.current?.triggerLoad()
               }
