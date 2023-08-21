@@ -3,8 +3,9 @@ import { cn } from '@/lib/utils';
 import { Chapter } from '@prisma/client';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { useToast } from './ui/use-toast';
+import { Loader2 } from 'lucide-react';
 
 interface ChapterCardProps {
   chapter: Chapter
@@ -16,12 +17,12 @@ export type ChapterCardHandler = {
   triggerLoad: () => void
 }
 
-const ChapterCard = React.forwardRef<ChapterCardHandler, ChapterCardProps>(({ chapter, chapterIndex, completedChapters, setCompletedChapters }, ref) => {
+const ChapterCard = forwardRef<ChapterCardHandler, ChapterCardProps>(({ chapter, chapterIndex, completedChapters, setCompletedChapters }, ref) => {
 
   const { toast } = useToast()
   const [success, setSuccess] = useState<boolean | null>(null)
 
-  const addChapterIdToSet = React.useCallback(() => {
+  const addChapterIdToSet = useCallback(() => {
     setCompletedChapters((prev) => {
       const newSet = new Set(prev);
       newSet.add(chapter.id);
@@ -32,18 +33,20 @@ const ChapterCard = React.forwardRef<ChapterCardHandler, ChapterCardProps>(({ ch
   useEffect(() => {
     if (chapter.videoId) {
       setSuccess(true);
-      addChapterIdToSet;
+      addChapterIdToSet
     }
   }, [chapter, addChapterIdToSet]);
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     async triggerLoad() {
       if (chapter.videoId) {
-
+        addChapterIdToSet();
+        return;
       }
       getChapterInfo(undefined, {
         onSuccess: () => {
           setSuccess(true)
+          addChapterIdToSet()
         },
         onError: (error) => {
           console.log(error)
@@ -53,7 +56,7 @@ const ChapterCard = React.forwardRef<ChapterCardHandler, ChapterCardProps>(({ ch
             description: "Oops, we hit a snag while turning the page to your chapter.",
             variant: "destructive",
           });
-
+          addChapterIdToSet()
         }
       })
     }
@@ -76,6 +79,7 @@ const ChapterCard = React.forwardRef<ChapterCardHandler, ChapterCardProps>(({ ch
       "bg-green-500": success === true,
     })}>
       <h5>{chapter.name}</h5>
+      {isLoading && <Loader2 className="animate-spin" />}
     </div>
   );
 })
