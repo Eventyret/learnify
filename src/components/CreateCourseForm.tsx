@@ -6,6 +6,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from './ui/form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from './ui/input';
+import { Separator } from './ui/separator';
+import { Button } from './ui/button';
+import { Plus, Trash, Wand2 } from 'lucide-react';
 
 interface CreateCourseFormProps { }
 
@@ -23,6 +26,12 @@ export const CreateCourseForm = () => {
   const onSubmit = (data: Input) => {
     console.log(data);
   }
+
+  const removeEmptyUnits = () => {
+    const units = form.watch("units");
+    const filteredUnits = [units[0], ...units.slice(1).filter(unit => unit.trim() !== "")];
+    form.setValue("units", filteredUnits);
+  };
 
   return (
     <div className='w-full'>
@@ -69,6 +78,44 @@ export const CreateCourseForm = () => {
               />
             )
           })}
+          <div className="flex items-center justify-center mt-4">
+            <Separator className="flex-[1]" />
+            <div className="mx-4">
+              <Button
+                type="button"
+                variant="secondary"
+                className="font-semibold"
+                onClick={() => {
+                  form.setValue("units", [...form.watch("units"), ""]);
+                }}
+              >
+                Add Unit
+                <Plus className="w-4 h-4 ml-2 text-green-500" />
+              </Button>
+
+              <Button
+                type="button"
+                variant="secondary"
+                className="font-semibold ml-2"
+                onClick={removeEmptyUnits}
+              >
+                Remove unused units
+                <Wand2 className="w-4 h-4 ml-2 text-orange-500" />
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                className="font-semibold ml-2"
+                onClick={() => {
+                  form.setValue("units", form.watch("units").slice(0, -1));
+                }}
+              >
+                Remove Unit
+                <Trash className="w-4 h-4 ml-2 text-red-500" />
+              </Button>
+            </div>
+            <Separator className="flex-[1]" />
+          </div>
         </form>
       </Form>
     </div>
