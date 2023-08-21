@@ -45,7 +45,14 @@ export const ConfirmChapters: React.FC<ConfirmChaptersProps> = ({ course }) => {
             <div className='mt-3'>
               {unit.chapters.map((chapter, chapterIndex) => {
                 return (
-                  <ChapterCard key={chapter.id} chapter={chapter} chapterIndex={chapterIndex} ref={chapterRefs[chapter.id]} />
+                  <ChapterCard
+                    completedChapters={completedChapters}
+                    setCompletedChapters={setCompletedChapters}
+                    key={chapter.id}
+                    chapter={chapter}
+                    chapterIndex={chapterIndex}
+                    ref={chapterRefs[chapter.id]}
+                  />
                 )
               })}
             </div>
