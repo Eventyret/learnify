@@ -45,6 +45,30 @@ export const CreateCourseForm = () => {
               );
             }}
           />
+          {form.watch("units").map((_, index) => {
+            return (
+              <FormField
+                key={index}
+                control={form.control}
+                name={`units.${index}`}
+                render={({ field }) => {
+                  return (
+                    <FormItem className="flex flex-col items-start w-full sm:items-center sm:flex-row">
+                      <FormLabel className="flex-[1] text-xl">
+                        Unit {index + 1}
+                      </FormLabel>
+                      <FormControl className="flex-[6]">
+                        <Input
+                          placeholder="Enter subtopic of the course"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  );
+                }}
+              />
+            )
+          })}
         </form>
       </Form>
     </div>
