@@ -36,7 +36,7 @@ export async function POST(req: Request, res: Response) {
       transcript,
       { summary: "summary of the transcript" }
     );
-
+    return NextResponse.json({ videoId, transcript, summary })
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({
