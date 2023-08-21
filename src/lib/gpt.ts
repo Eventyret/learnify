@@ -19,18 +19,11 @@ export async function strict_output(
   temperature: number = 1,
   num_tries: number = 3,
   verbose: boolean = false
-): Promise<
-  {
-    question: string;
-    answer: string;
-  }[]
-> {
+) {
   // if the user input is in a list, we also process the output as a list of json
   const list_input: boolean = Array.isArray(user_prompt);
-
   // if the output format contains dynamic elements of < or >, then add to the prompt to handle dynamic elements
   const dynamic_elements: boolean = /<.*?>/.test(JSON.stringify(output_format));
-
   // if the output format contains list elements of [ or ], then we add to the prompt to handle lists
   const list_output: boolean = /\[.*?\]/.test(JSON.stringify(output_format));
 
@@ -38,9 +31,10 @@ export async function strict_output(
   let error_msg: string = "";
 
   for (let i = 0; i < num_tries; i++) {
-    let output_format_prompt: string = `\nYou are to output the following in json format: ${JSON.stringify(
-      output_format
-    )}. \nDo not put quotation marks or escape character \\ in the output fields.`;
+    let output_format_prompt: string = `\nYou are to output ${list_output && "an array of objects in"
+      } the following in json format: ${JSON.stringify(
+        output_format
+      )}. \nDo not put quotation marks or escape character \\ in the output fields.`;
 
     if (list_output) {
       output_format_prompt += `\nIf output field is a list, classify output into the best element of the list.`;
@@ -53,7 +47,7 @@ export async function strict_output(
 
     // if input is in a list format, ask it to generate json in a list
     if (list_input) {
-      output_format_prompt += `\nGenerate a list of json, one json for each input element.`;
+      output_format_prompt += `\nGenerate an array of json, one json for each input element.`;
     }
 
     // Use OpenAI to get a response
@@ -90,7 +84,7 @@ export async function strict_output(
 
       if (list_input) {
         if (!Array.isArray(output)) {
-          throw new Error("Output format not in a list of json");
+          throw new Error("Output format not in an array of json");
         }
       } else {
         output = [output];
@@ -99,7 +93,6 @@ export async function strict_output(
       // check for each element in the output_list, the format is correctly adhered to
       for (let index = 0; index < output.length; index++) {
         for (const key in output_format) {
-
           // unable to ensure accuracy of dynamic output header, so skip it
           if (/<.*?>/.test(key)) {
             continue;
@@ -113,17 +106,14 @@ export async function strict_output(
           // check that one of the choices given for the list of words is an unknown
           if (Array.isArray(output_format[key])) {
             const choices = output_format[key] as string[];
-
             // ensure output is not a list
             if (Array.isArray(output[index][key])) {
               output[index][key] = output[index][key][0];
             }
-
             // output the default category (if any) if GPT is unable to identify the category
             if (!choices.includes(output[index][key]) && default_category) {
               output[index][key] = default_category;
             }
-
             // if the output is a description format, get only the label
             if (output[index][key].includes(":")) {
               output[index][key] = output[index][key].split(":")[0];
@@ -134,7 +124,6 @@ export async function strict_output(
         // if we just want the values for the outputs
         if (output_value_only) {
           output[index] = Object.values(output[index]);
-
           // just output without the list if there is only one element
           if (output[index].length === 1) {
             output[index] = output[index][0];
@@ -146,7 +135,7 @@ export async function strict_output(
     } catch (e) {
       error_msg = `\n\nResult: ${res}\n\nError message: ${e}`;
       console.log("An exception occurred:", e);
-      console.log("Current invalid json format:", res);
+      console.log("Current invalid json format ", res);
     }
   }
 
