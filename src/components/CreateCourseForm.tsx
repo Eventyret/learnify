@@ -1,10 +1,11 @@
+"use client"
 
 interface CreateCourseFormProps { }
 
-export const CreateCourseForm = async () => {
+export const CreateCourseForm = () => {
   return (
-    <div>
-      CreateCourseForm
+    <div className='w-full'>
+
     </div>
   );
 }
