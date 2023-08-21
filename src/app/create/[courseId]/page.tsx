@@ -1,3 +1,4 @@
+import { ConfirmChapters } from '@/components/ConfirmChapters';
 import { getAuthSession } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { Info } from 'lucide-react';
@@ -42,6 +43,7 @@ const CreateChapter: React.FC<CreateChapterProps> = async ({ params: { courseId 
           We generated chapters for each of your units. Look over them and then click the button to confirm and continue
         </div>
       </div>
+      <ConfirmChapters course={course} />
     </div>
   );
 }
