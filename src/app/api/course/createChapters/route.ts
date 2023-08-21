@@ -6,6 +6,7 @@ import { ZodError } from "zod";
 import { strict_output } from "@/lib/gpt";
 import { prisma } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
+import { getUnsplashImage } from '@/lib/unsplash';
 
 export async function POST(req: Request, res: Response) {
   try {
@@ -35,16 +36,17 @@ export async function POST(req: Request, res: Response) {
     );
 
     const imageSearchTerm = await strict_output(
-      "you are an AI capable of finding the most relevant image for a course",
+      "You are an AI capable of finding the most relevant image for a course",
       `Please provide a good image search term for the title of a course about ${title}. This search term will be fed into the unsplash API, so make sure it is a good search term that will return good results`,
       {
         image_search_term: "a good search term for the title of the course",
       }
     );
 
+    const course_image = await getUnsplashImage(imageSearchTerm.image_search_term);
 
 
-    return NextResponse.json({ output_units });
+    return NextResponse.json({ output_units, imageSearchTerm, course_image });
   } catch (error) {
     if (error instanceof ZodError) {
       return new NextResponse("invalid body", { status: 400 });
