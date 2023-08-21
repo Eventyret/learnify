@@ -5,13 +5,26 @@ import { cn } from '@/lib/utils';
 import { Chapter } from '@prisma/client';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+import React from 'react';
 
 interface ChapterCardProps {
   chapter: Chapter
   chapterIndex: number
 }
+export type ChapterCardHandler = {
+  triggerLoad: () => void
+}
 
-const ChapterCard: React.FC<ChapterCardProps> = ({ chapter, chapterIndex }) => {
+const ChapterCard = React.forwardRef<ChapterCardHandler, ChapterCardProps>(({ chapter, chapterIndex }, ref) => {
+  React.useImperativeHandle(ref, () => ({
+    async triggerLoad() {
+      getChapterInfo(undefined, {
+        onSuccess: () => {
+          console.log('success')
+        }
+      })
+    }
+  }))
   const [success, setSuccess] = useState<boolean | null>(null)
   const { mutate: getChapterInfo, isLoading } = useMutation({
     mutationFn: async () => {
@@ -25,9 +38,11 @@ const ChapterCard: React.FC<ChapterCardProps> = ({ chapter, chapterIndex }) => {
       "bg-red-500": success === false,
       "bg-green-500": success === true,
     })}>
-      <h5>{chapterIndex + 1} {chapter.name}</h5>
+      <h5>{chapter.name}</h5>
     </div>
   );
-}
+})
+
+ChapterCard.displayName = 'ChapterCard';
 
 export default ChapterCard;

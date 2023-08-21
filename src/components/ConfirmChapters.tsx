@@ -2,18 +2,26 @@
 import { Separator } from '@/components/ui/separator';
 import { Chapter, Course, Unit } from '@prisma/client';
 import { ChevronLeft, ChevronRight, Link } from 'lucide-react';
-import ChapterCard from './ChapterCard';
+import React from 'react';
+import ChapterCard, { ChapterCardHandler } from './ChapterCard';
 import { Button, buttonVariants } from './ui/button';
 
 type ConfirmChaptersProps = {
   course: Course & {
     units: (Unit & {
-      chapters: Chapter[]
-    })[]
-  }
+      chapters: Chapter[];
+    })[];
+  };
 }
 
-export const ConfirmChapters: React.FC<ConfirmChaptersProps> = async ({ course }) => {
+export const ConfirmChapters: React.FC<ConfirmChaptersProps> = ({ course }) => {
+  const chapterRefs: Record<string, React.RefObject<ChapterCardHandler>> = {};
+  course.units.forEach((unit) => {
+    unit.chapters.forEach((chapter) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      chapterRefs[chapter.id] = React.useRef(null);
+    });
+  });
   return (
     <div className='w-full mt-4'>
       {course.units.map((unit, unitIndex) => {
@@ -26,7 +34,7 @@ export const ConfirmChapters: React.FC<ConfirmChaptersProps> = async ({ course }
             <div className='mt-3'>
               {unit.chapters.map((chapter, chapterIndex) => {
                 return (
-                  <ChapterCard key={chapter.id} chapter={chapter} chapterIndex={chapterIndex} />
+                  <ChapterCard key={chapter.id} chapter={chapter} chapterIndex={chapterIndex} ref={chapterRefs[chapter.id]} />
                 )
               })}
             </div>
@@ -49,6 +57,12 @@ export const ConfirmChapters: React.FC<ConfirmChaptersProps> = async ({ course }
           <Button
             type="button"
             className="ml-4 font-semibold"
+            onClick={() => {
+              Object.values(chapterRefs).forEach((ref) => {
+                ref?.current?.triggerLoad()
+              }
+              )
+            }}
           >
             Generate
             <ChevronRight className="w-4 h-4 ml-2" strokeWidth={4} />
