@@ -1,5 +1,5 @@
 "use client"
-
+import axios from 'axios';
 import { createChaptersSchema } from '@/validators/course';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -10,12 +10,24 @@ import { Button } from './ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel } from './ui/form';
 import { Input } from './ui/input';
 import { Separator } from './ui/separator';
+import { useMutation } from '@tanstack/react-query';
+import { title } from 'process';
+import { toast } from './ui/use-toast';
 
 interface CreateCourseFormProps { }
 
 type Input = z.infer<typeof createChaptersSchema>;
 
 export const CreateCourseForm = () => {
+  const { mutate: createChapters, isLoading } = useMutation({
+    mutationFn: async ({ title, units }: Input) => {
+      const response = await axios.post("/api/course/createChapters", {
+        title,
+        units,
+      });
+      return response.data;
+    },
+  });
   const form = useForm<Input>({
     resolver: zodResolver(createChaptersSchema),
     defaultValues: {
@@ -25,7 +37,20 @@ export const CreateCourseForm = () => {
   })
 
   const onSubmit = (data: Input) => {
-    console.log(data);
+    if (data.units.some((unit) => unit === "")) {
+      toast({
+        title: "Error",
+        description: "Please fill all the units",
+        variant: "destructive",
+      });
+      return;
+    }
+    createChapters(data, {
+      onSuccess: () => { },
+      onError: (error) => {
+        console.error(error)
+      },
+    });
   }
 
   const removeEmptyUnits = () => {
@@ -128,7 +153,7 @@ export const CreateCourseForm = () => {
             </div>
             <Separator className="flex-[1]" />
           </div>
-          <Button type='submit' className='w-full mt-6' size="lg">
+          <Button type='submit' className='w-full mt-6' size="lg" disabled={isLoading}>
             Let&apos;s go!
             <Rocket className='w-4 -h-4 ml-2' />
           </Button>
