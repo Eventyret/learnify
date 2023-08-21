@@ -27,8 +27,10 @@ export async function strict_output(
 > {
   // if the user input is in a list, we also process the output as a list of json
   const list_input: boolean = Array.isArray(user_prompt);
+
   // if the output format contains dynamic elements of < or >, then add to the prompt to handle dynamic elements
   const dynamic_elements: boolean = /<.*?>/.test(JSON.stringify(output_format));
+
   // if the output format contains list elements of [ or ], then we add to the prompt to handle lists
   const list_output: boolean = /\[.*?\]/.test(JSON.stringify(output_format));
 
@@ -97,6 +99,7 @@ export async function strict_output(
       // check for each element in the output_list, the format is correctly adhered to
       for (let index = 0; index < output.length; index++) {
         for (const key in output_format) {
+
           // unable to ensure accuracy of dynamic output header, so skip it
           if (/<.*?>/.test(key)) {
             continue;
@@ -110,14 +113,17 @@ export async function strict_output(
           // check that one of the choices given for the list of words is an unknown
           if (Array.isArray(output_format[key])) {
             const choices = output_format[key] as string[];
+
             // ensure output is not a list
             if (Array.isArray(output[index][key])) {
               output[index][key] = output[index][key][0];
             }
+
             // output the default category (if any) if GPT is unable to identify the category
             if (!choices.includes(output[index][key]) && default_category) {
               output[index][key] = default_category;
             }
+
             // if the output is a description format, get only the label
             if (output[index][key].includes(":")) {
               output[index][key] = output[index][key].split(":")[0];
@@ -128,6 +134,7 @@ export async function strict_output(
         // if we just want the values for the outputs
         if (output_value_only) {
           output[index] = Object.values(output[index]);
+
           // just output without the list if there is only one element
           if (output[index].length === 1) {
             output[index] = output[index][0];
