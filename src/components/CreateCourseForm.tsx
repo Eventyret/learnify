@@ -1,24 +1,24 @@
 "use client"
-import axios from 'axios';
 import { createChaptersSchema } from '@/validators/course';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Plus, Rocket, Trash, Wand2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from './ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel } from './ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Input } from './ui/input';
 import { Separator } from './ui/separator';
-import { useMutation } from '@tanstack/react-query';
-import { title } from 'process';
-import { toast } from './ui/use-toast';
+import { useToast } from './ui/use-toast';
 
 interface CreateCourseFormProps { }
 
 type Input = z.infer<typeof createChaptersSchema>;
 
 export const CreateCourseForm = () => {
+  const { toast } = useToast();
   const { mutate: createChapters, isLoading } = useMutation({
     mutationFn: async ({ title, units }: Input) => {
       const response = await axios.post("/api/course/createChapters", {
@@ -38,11 +38,13 @@ export const CreateCourseForm = () => {
 
   const onSubmit = (data: Input) => {
     if (data.units.some((unit) => unit === "")) {
+      console.log("empty units")
       toast({
-        title: "Error",
-        description: "Please fill all the units",
+        title: "Uh-oh!",
+        description: "Looks like you left some units unattended!",
         variant: "destructive",
       });
+
       return;
     }
     createChapters(data, {
@@ -78,10 +80,12 @@ export const CreateCourseForm = () => {
                       {...field}
                     />
                   </FormControl>
+
                 </FormItem>
               );
             }}
           />
+
           <AnimatePresence>
             {form.watch("units").map((_, index) => {
               return (
@@ -162,3 +166,5 @@ export const CreateCourseForm = () => {
     </div >
   );
 }
+
+
