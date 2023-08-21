@@ -14,7 +14,8 @@ export const CreateCourseForm = () => {
   const form = useForm<Input>({
     resolver: zodResolver(createChaptersSchema),
     defaultValues: {
-      title
+      title: '',
+      units: ["", "", ""]
     }
   })
 
