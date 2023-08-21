@@ -1,15 +1,15 @@
 "use client"
 
-import { z } from 'zod';
 import { createChaptersSchema } from '@/validators/course';
-import { Form, FormControl, FormField, FormItem, FormLabel } from './ui/form';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Plus, Rocket, Trash, Wand2 } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Button } from './ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel } from './ui/form';
 import { Input } from './ui/input';
 import { Separator } from './ui/separator';
-import { Button } from './ui/button';
-import { Plus, Trash, Wand2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion'
 
 interface CreateCourseFormProps { }
 
@@ -128,6 +128,10 @@ export const CreateCourseForm = () => {
             </div>
             <Separator className="flex-[1]" />
           </div>
+          <Button type='submit' className='w-full mt-6' size="lg">
+            Let&apos;s go!
+            <Rocket className='w-4 -h-4 ml-2' />
+          </Button>
         </form>
       </Form>
     </div >
