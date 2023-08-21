@@ -12,13 +12,16 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from './ui/input';
 import { Separator } from './ui/separator';
 import { useToast } from './ui/use-toast';
+import { useRouter } from 'next/navigation';
 
 interface CreateCourseFormProps { }
 
 type Input = z.infer<typeof createChaptersSchema>;
 
 export const CreateCourseForm = () => {
+  const router = useRouter();
   const { toast } = useToast();
+
   const { mutate: createChapters, isLoading } = useMutation({
     mutationFn: async ({ title, units }: Input) => {
       const response = await axios.post("/api/course/createChapters", {
@@ -38,7 +41,6 @@ export const CreateCourseForm = () => {
 
   const onSubmit = (data: Input) => {
     if (data.units.some((unit) => unit === "")) {
-      console.log("empty units")
       toast({
         title: "Uh-oh!",
         description: "Looks like you left some units unattended!",
@@ -48,9 +50,21 @@ export const CreateCourseForm = () => {
       return;
     }
     createChapters(data, {
-      onSuccess: () => { },
+      onSuccess: ({ course_id }) => {
+        toast({
+          title: "Course Served!",
+          description: "You've cooked up a fantastic course! It's ready to be served.",
+        });
+        router.push(`/create/${course_id}`)
+      },
       onError: (error) => {
         console.error(error)
+        toast({
+          title: "Server Stir!",
+          description: "We're having trouble cooking up your course. Please try again later!",
+          variant: "destructive",
+        });
+
       },
     });
   }
