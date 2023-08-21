@@ -53,7 +53,7 @@ const ChapterCard = forwardRef<ChapterCardHandler, ChapterCardProps>(({ chapter,
           setSuccess(false)
           toast({
             title: "Chapter Choke!",
-            description: "Oops, we hit a snag while turning the page to your chapter.",
+            description: `Oops, we hit a snag while turning ${chapter.name}  into a chapter.`,
             variant: "destructive",
           });
           addChapterIdToSet()
