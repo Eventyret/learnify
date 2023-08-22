@@ -13,17 +13,17 @@ interface CoursePageProps {
 const CoursePage: React.FC<CoursePageProps> = async ({ params: { slug } }) => {
   const [courseId, unitIndexParam, chapterIndexParam] = slug
   const course = await prisma.course.findUnique({
-    where: {
-      id: courseId
-    },
+    where: { id: courseId },
     include: {
       units: {
         include: {
-          chapters: true
-        }
-      }
-    }
-  })
+          chapters: {
+            include: { questions: true },
+          },
+        },
+      },
+    },
+  });
   if (!course) {
     return redirect('/gallery')
   }
@@ -52,7 +52,7 @@ const CoursePage: React.FC<CoursePageProps> = async ({ params: { slug } }) => {
             chapterIndex={chapterIndex}
             unitIndex={unitIndex}
           />
-          <QuizCards />
+          <QuizCards chapter={chapter} />
         </div>
       </div>
     </>
