@@ -8,7 +8,7 @@ interface MainVideoSummaryProps {
   unitIndex: number
 }
 
-export const MainVideoSummary: React.FC<MainVideoSummaryProps> = async ({ chapter, unit, unitIndex, chapterIndex }) => {
+export const MainVideoSummary: React.FC<MainVideoSummaryProps> = ({ chapter, unit, unitIndex, chapterIndex }) => {
   return (
     <div className='flex-[2] mt-16'>
       <h4 className='text-sm uppercase text-secondary-foreground/60'>
@@ -26,9 +26,6 @@ export const MainVideoSummary: React.FC<MainVideoSummaryProps> = async ({ chapte
             <p className='mt-2 text-secondary-foreground/80'>
               {chapter.summary}
             </p>
-
-            <h3 className='inline-flex'>No Summary <Frown className='ml-2' /></h3>
-
           </div>
         </>
       ) : (
@@ -39,7 +36,6 @@ export const MainVideoSummary: React.FC<MainVideoSummaryProps> = async ({ chapte
           </h2>
         </div>
       )}
-
     </div>
   );
 }

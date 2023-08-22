@@ -31,7 +31,12 @@ export const QuizCards = ({ chapter }: Props) => {
       setQuestionState(newQuestionState);
     });
   }, [answers, questionState, chapter.questions]);
+
+  if (chapter.questions.length === 0) {
+    return null;
+  }
   return (
+
     <div className="flex-[1] mt-16 ml-8">
       <h1 className="text-2xl font-bold">Concept Check</h1>
       <div className="mt-2">
