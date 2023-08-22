@@ -1,5 +1,8 @@
+"use client"
 import { Chapter, Unit } from '@prisma/client';
-import { Frown } from 'lucide-react';
+import { Footprints, Frown, Undo2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Button } from './ui/button';
 
 interface MainVideoSummaryProps {
   chapter: Chapter
@@ -9,6 +12,8 @@ interface MainVideoSummaryProps {
 }
 
 export const MainVideoSummary: React.FC<MainVideoSummaryProps> = ({ chapter, unit, unitIndex, chapterIndex }) => {
+  const router = useRouter();
+
   return (
     <div className='flex-[2]'>
       <div className='mt-8'>
@@ -37,7 +42,11 @@ export const MainVideoSummary: React.FC<MainVideoSummaryProps> = ({ chapter, uni
           <h2 className='text-center text-lg'>
             Looks like this chapter&apos;s missing its script and screen time! Sorry for the cliffhanger.
           </h2>
+          <Button variant={"default"} onClick={() => router.back()} className='mt-4 px-4 py-2 '>
+            Go back one step <Undo2 />
+          </Button>
         </div>
+
       )
       }
     </div >
