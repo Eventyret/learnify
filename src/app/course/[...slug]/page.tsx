@@ -11,6 +11,7 @@ interface CoursePageProps {
 }
 
 const CoursePage: React.FC<CoursePageProps> = async ({ params: { slug } }) => {
+
   const [courseId, unitIndexParam, chapterIndexParam] = slug
   const course = await prisma.course.findUnique({
     where: { id: courseId },
@@ -39,23 +40,32 @@ const CoursePage: React.FC<CoursePageProps> = async ({ params: { slug } }) => {
     return redirect(`/gallery`)
   }
   return (
-    <>
-      <CourseSideBar
-        course={course}
-        currentChapterId={chapter.id}
-      />
-      <div className='ml-[400px] px-8'>
-        <div className='flex'>
-          <MainVideoSummary
-            chapter={chapter}
-            unit={unit}
-            chapterIndex={chapterIndex}
-            unitIndex={unitIndex}
-          />
-          <QuizCards chapter={chapter} />
-        </div>
+    <div className="flex flex-col lg:flex-row mt-2">
+      {/* CourseSideBar */}
+      <div className="hidden lg:block lg:w-1/4">
+        <CourseSideBar course={course} currentChapterId={chapter.id} />
       </div>
-    </>
+
+      {/* On small screens, CourseSideBar slide-in (assuming you'll use JavaScript to toggle this) */}
+      <div className="block lg:hidden">
+        <CourseSideBar course={course} currentChapterId={chapter.id} />
+      </div>
+
+      {/* MainContent */}
+      <div className="lg:w-1/2 px-8">
+        <MainVideoSummary
+          chapter={chapter}
+          unit={unit}
+          chapterIndex={chapterIndex}
+          unitIndex={unitIndex}
+        />
+      </div>
+
+      {/* QuizCards */}
+      <div className="lg:w-1/4 px-8">
+        <QuizCards chapter={chapter} />
+      </div>
+    </div>
   );
 }
 

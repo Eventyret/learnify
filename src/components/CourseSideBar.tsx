@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { Course, Unit, Chapter } from '@prisma/client';
 import Link from 'next/link';
 import { Separator } from './ui/separator';
-
+import { Menu } from 'lucide-react';
 
 type CourseSideBarProps = {
   course: Course & {
@@ -13,34 +13,40 @@ type CourseSideBarProps = {
   currentChapterId: string;
 }
 
-const CourseDiebar: React.FC<CourseSideBarProps> = async ({ course, currentChapterId }) => {
+const CourseSidebar: React.FC<CourseSideBarProps> = ({ course, currentChapterId }) => {
   return (
-    <div className="w-[400px] absolute top-1/2 -translate-y-1/2 p-6 rounded-r-3xl bg-secondary">
-      <h1 className='text-4xl font-bold'>
-        {course.name}
-      </h1>
-      {course.units.map((unit, unitIndex) => {
-        return (
-          <div key={unit.id} className='mt-4'>
-            <h2 className='text-sm uppercase text-secondary-foreground/60'>Unit {unitIndex + 1}</h2>
-            <h3 className='text-2xl font-bold'> {unit.name}</h3>
-            {unit.chapters.map((chapter, chapterIndex) => {
-              return (
-                <div key={chapter.id}>
-                  <Link href={`/course/${course.id}/${unitIndex}/${chapterIndex}`}
-                    className={cn("text-secondary-foreground/60", {
+    <div
+      className="group flex w-[60px] hover:w-[400px] md:w-[60px] md:hover:w-[400px] lg:w-[400px] h-[60px] md:h-min-screen lg:h-auto fixed md:fixed lg:static z-10 top-0 p-6 rounded-r-3xl bg-white dark:bg-gray-950 lg:translate-x-0 hover:h-screen transition-all duration-300 ease-in-out sm:mt-16 md:mt-16 lg:mt-0 lg:dark:bg-secondary lg:bg-secondary"
+
+
+    >
+      <Menu name="menu" className="self-center lg:hidden group-hover:hidden w-24 h-24" />
+      <div className="w-full overflow-y-auto hidden md:hidden lg:block group-hover:block">
+        <h1 className='text-4xl font-bold'>
+          {course.name}
+        </h1>
+        {course.units.map((unit, unitIndex) => {
+          return (
+            <div key={unit.id} className='mt-4'>
+              <h2 className='text-sm uppercase text-secondary-foreground/60'>Unit {unitIndex + 1}</h2>
+              <h3 className='text-2xl font-bold'> {unit.name}</h3>
+              {unit.chapters.map((chapter, chapterIndex) => {
+                return (
+                  <div key={chapter.id}>
+                    <Link href={`/course/${course.id}/${unitIndex}/${chapterIndex}`} className={cn("text-secondary-foreground/60", {
                       "text-green-500 font-bold": chapter.id === currentChapterId
                     })}>
-                    {chapter.name}
-                  </Link>
-                </div>
-              )
-            })}
-            <Separator className='mt-2 text-gray-500 bg-gray-500' />
-          </div>
-        )
-      })}
-    </div >
+                      {chapter.name}
+                    </Link>
+                  </div>
+                )
+              })}
+              <Separator className='mt-2 text-gray-500 bg-gray-500' />
+            </div>
+          )
+        })}
+      </div>
+    </div>
   );
 }
-export default CourseDiebar;
+export default CourseSidebar;
