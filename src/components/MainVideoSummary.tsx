@@ -10,9 +10,11 @@ interface MainVideoSummaryProps {
 
 export const MainVideoSummary: React.FC<MainVideoSummaryProps> = ({ chapter, unit, unitIndex, chapterIndex }) => {
   return (
-    <div className='flex-[2] mt-16'>
-      <h4 className='text-sm uppercase text-secondary-foreground/60'>
-        Unit {unitIndex + 1} &bull;  Chapter {chapterIndex + 1}</h4>
+    <div className='flex-[2]'>
+      <div className='mt-8'>
+        <h4 className='text-sm uppercase text-secondary-foreground/60 mt-2'>
+          Unit {unitIndex + 1} &bull;  Chapter {chapterIndex + 1}</h4>
+      </div>
       {chapter.summary ? (
         <>
           <h1 className='text-4xl font-bold'>{chapter.name}</h1>
@@ -27,15 +29,17 @@ export const MainVideoSummary: React.FC<MainVideoSummaryProps> = ({ chapter, uni
               {chapter.summary}
             </p>
           </div>
+
         </>
       ) : (
         <div className='flex items-center justify-center min-h-screen flex-col'>
-          <Frown className='w-12 h-12 mb-4' />
-          <h2 className='text-center'>
+          <Frown className='w-36 h-36 mb-4' />
+          <h2 className='text-center text-lg'>
             Looks like this chapter&apos;s missing its script and screen time! Sorry for the cliffhanger.
           </h2>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 }
