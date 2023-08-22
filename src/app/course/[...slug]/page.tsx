@@ -1,4 +1,6 @@
 import CourseSideBar from '@/components/CourseSideBar'
+import { MainVideoSummary } from '@/components/MainVideoSummary'
+import { QuizCards } from '@/components/QuizCards'
 import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
 
@@ -37,10 +39,23 @@ const CoursePage: React.FC<CoursePageProps> = async ({ params: { slug } }) => {
     return redirect(`/gallery`)
   }
   return (
-    <CourseSideBar
-      course={course}
-      currentChapterId={chapter.id}
-    />
+    <>
+      <CourseSideBar
+        course={course}
+        currentChapterId={chapter.id}
+      />
+      <div className='ml-[400px] px-8'>
+        <div className='flex'>
+          <MainVideoSummary
+            chapter={chapter}
+            unit={unit}
+            chapterIndex={chapterIndex}
+            unitIndex={unitIndex}
+          />
+          <QuizCards />
+        </div>
+      </div>
+    </>
   );
 }
 
