@@ -107,4 +107,5 @@ model UserSubscription {
 enum Role {
   ADMIN
   USER
+  PREMIUM
 }
