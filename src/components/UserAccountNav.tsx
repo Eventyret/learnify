@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,12 +7,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Button } from "./ui/button";
-import { User } from "next-auth";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { User } from '@prisma/client';
+import { LogOut, ShieldCheck } from "lucide-react";
 import { signOut } from "next-auth/react";
-import { LogOut } from "lucide-react";
 import { UserAvatar } from './UserAvatar';
-// import UserAvatar from "./UserAvatar";
 
 type Props = {
   user: User;
@@ -28,7 +32,21 @@ export const UserAccountNav = ({ user }: Props) => {
       <DropdownMenuContent align="end">
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
-            {user?.name && <p className="font-medium">{user.name}</p>}
+            {user?.name && (
+              <div className="flex items-center space-x-2">
+                <p className="font-medium">{user.name}</p>
+                {user.role === "ADMIN" && (
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <ShieldCheck />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Admin</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+              </div>
+            )}
             {user?.email && (
               <p className="w-[200px] truncate text-sm text-secondary-foreground">
                 {user.email}
@@ -36,6 +54,8 @@ export const UserAccountNav = ({ user }: Props) => {
             )}
           </div>
         </div>
+
+
 
         <DropdownMenuSeparator />
         <DropdownMenuItem

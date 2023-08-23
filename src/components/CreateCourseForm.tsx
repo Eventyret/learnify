@@ -13,6 +13,7 @@ import { Input } from './ui/input';
 import { Separator } from './ui/separator';
 import { useToast } from './ui/use-toast';
 import { useRouter } from 'next/navigation';
+import SubscriptionAction from './SubscriptionAction';
 
 interface CreateCourseFormProps { }
 
@@ -179,6 +180,7 @@ export const CreateCourseForm = () => {
           </Button>
         </form>
       </Form>
+      <SubscriptionAction />
     </div >
   );
 }

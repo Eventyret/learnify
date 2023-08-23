@@ -3,12 +3,14 @@ import { prisma } from "./db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
+import { Role } from '@prisma/client';
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
       credits: number;
+      role: Role
     } & DefaultSession["user"];
   }
 }
@@ -17,6 +19,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: string;
     credits: number;
+    role: Role
   }
 }
 
@@ -36,6 +39,7 @@ export const authOptions: NextAuthOptions = {
       if (db_user) {
         token.id = db_user.id;
         token.credits = db_user.credits;
+        token.role = db_user.role;
       }
       return token;
     },
@@ -46,6 +50,7 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email;
         session.user.image = token.picture;
         session.user.credits = token.credits;
+        session.user.role = token.role;
       }
       return session;
     },
