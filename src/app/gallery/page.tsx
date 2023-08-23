@@ -8,7 +8,9 @@ const GalleryPage: React.FC<GalleryPageProps> = async () => {
     include: {
       units: {
         include: {
-          chapters: true,
+          chapters: {
+            include: { questions: true },
+          }
         }
       }
     }

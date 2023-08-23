@@ -102,6 +102,7 @@ const CoursePage: React.FC<CoursePageProps> = async ({ params: { slug } }) => {
             </Link>
           )}
         </div >
+
       </div>
 
       {/* QuizCards */}
