@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Plus, Rocket, Trash, Wand2 } from 'lucide-react';
+import { Loader2, Plus, Rocket, Trash, Wand2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from './ui/button';
@@ -173,7 +173,9 @@ export const CreateCourseForm = () => {
           </div>
           <Button type='submit' className='w-full mt-6' size="lg" disabled={isLoading}>
             Let&apos;s go!
-            <Rocket className='w-4 -h-4 ml-2' />
+            {!isLoading && <Rocket className='w-4 -h-4 ml-2' />}
+
+            {isLoading && <Loader2 className="animate-spin" />}
           </Button>
         </form>
       </Form>
