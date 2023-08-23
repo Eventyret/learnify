@@ -15,7 +15,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { User } from '@prisma/client';
-import { LogOut, ShieldCheck } from "lucide-react";
+import { LogOut, ShieldAlertIcon, ShieldCheck, Zap } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { UserAvatar } from './UserAvatar';
 
@@ -35,15 +35,11 @@ export const UserAccountNav = ({ user }: Props) => {
             {user?.name && (
               <div className="flex items-center space-x-2">
                 <p className="font-medium">{user.name}</p>
-                {user.role === "ADMIN" && (
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <ShieldCheck />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Admin</p>
-                    </TooltipContent>
-                  </Tooltip>
+                {user.role === 'PREMIUM' && (
+                  <Zap />
+                )}
+                {user.role === 'ADMIN' && (
+                  <ShieldCheck />
                 )}
               </div>
             )}
